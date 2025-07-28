@@ -1,31 +1,38 @@
 import { pool } from "../../db.js";
-
-export async function updateSubscription(
-  userId,
-  plan,
-  status,
-  startDate,
-  endDate
-) {
-  const result = await pool.query(
-    "UPDATE users SET subscription_plan = $1, subscription_status = $2, subscription_start_date = $3, subscription_end_date = $4 WHERE id = $5 RETURNING *",
-    [plan, status, startDate, endDate, userId]
-  );
+import { sqlifyKeyValuePairsForCreate } from "../../utils/sqlUtils.js";
+export async function createSubscription(data) {
+  const { values, columns, placeholders } = sqlifyKeyValuePairsForCreate(data);
+  const query = `INSERT INTO subscription (${columns}) VALUES (${placeholders}) RETURNING *`;
+  const result = await pool.query(query, values);
+  return result.rows[0];
+}
+// user subscription getter
+export async function getSubscriptionByUserId(userId) {
+  const query = `SELECT * FROM subscription WHERE "subscriberId" = $1 and "subscriberType" = 'user'`;
+  const result = await pool.query(query, [userId]);
   return result.rows[0];
 }
 
-export async function cancelSubscription(userId, status) {
-  const result = await pool.query(
-    "UPDATE users SET subscription_status = $1 WHERE id = $2 RETURNING *",
-    [status, userId]
-  );
+// merchant subscription getter
+export async function getSubscriptionByMerchantId(merchantId) {
+  const query = `SELECT * FROM subscription WHERE "subscriberId" = $1 and "subscriberType" = 'merchant'`;
+  const result = await pool.query(query, [merchantId]);
+  return result.rows[0];
+}
+//
+export async function getSubscriptionByPlanId(planId) {
+  const query = `SELECT * FROM subscription WHERE "planId" = $1`;
+  const result = await pool.query(query, [planId]);
+  return result.rows[0];
+}
+export async function cancelSubscription(id) {
+  const query = `UPDATE subscription SET "cancelledAt" = CURRENT_TIMESTAMP WHERE id = $1`;
+  const result = await pool.query(query, [id]);
   return result.rows[0];
 }
 
-export async function getSubscription(userId) {
-  const result = await pool.query(
-    "SELECT subscription_plan, subscription_status, subscription_start_date, subscription_end_date FROM users WHERE id = $1",
-    [userId]
-  );
-  return result.rows[0];
+export async function getActiveSubscriptions() {
+  const query = `SELECT * FROM subscription WHERE "cancelledAt" IS NULL`;
+  const result = await pool.query(query);
+  return result.rows;
 }

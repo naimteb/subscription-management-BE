@@ -25,9 +25,12 @@ on delete cascade;
 
 
 
+
+
 create table plan(
   id serial primary key,
-  "merchantId" integer add constraint fk_merchant_id-- the merchant offers a plan 
+  "merchantId" int not null,-- the merchant offer plan
+  constraint fk_merchant_id foreign key("merchantId")
 references merchant(id) 
 on delete cascade,
 name varchar(50) not null,
@@ -35,10 +38,11 @@ name varchar(50) not null,
   "createdAt" timestamp default current_timestamp,
   "updatedAt" timestamp default current_timestamp
 )
-
+ -- subscription record 
 create table subscription(
   id serial primary key,
-  "planId" integer add constraint fk_plan_id
+  "planId" int not null,
+  constraint fk_plan_id foreign key ("planId")
 references plan(id)-- wich plan  to subscribe
 on delete cascade,
   "subscriberType" varchar(10) check ("subscriberType" in ('user', 'merchant')) not null,-- who is subscribing 
@@ -46,6 +50,8 @@ on delete cascade,
   "createdAt" timestamp default current_timestamp,
   "updatedAt" timestamp default current_timestamp,
   "expiresAt" timestamp not null,
-  "cancelledAt" timestamp,)
+  "cancelledAt" timestamp)
 
-
+  ALTER TABLE subscription
+ALTER COLUMN "expiresAt"
+SET DEFAULT NOW() + INTERVAL '1 hour';

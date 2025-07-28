@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { getUserPermissions } from "../models/userModel.js";
 dotenv.config();
 import { asyncHandler } from "./asyncHandler.js";
 export const verifyToken = asyncHandler(async (req, res, next) => {

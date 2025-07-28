@@ -1,25 +1,27 @@
 import {
-  updateSubscription as updateSubscriptionQuery,
-  cancelSubscription as cancelSubscriptionQuery,
-  getSubscription as getSubscriptionQuery,
+  createSubscription,
+  getSubscriptionByUserId,
+  getSubscriptionByMerchantId,
+  getSubscriptionByPlanId,
+  cancelSubscription,
+  getActiveSubscriptions,
 } from "../models/subscriptionModel.js";
 
-export async function updateSubscription(userId, plan, startDate, endDate) {
-  const status = "active";
-  return await updateSubscriptionQuery(
-    userId,
-    plan,
-    status,
-    startDate,
-    endDate
-  );
+export async function createSubscriptionService(data) {
+  return await createSubscription(data);
 }
-
-export async function cancelSubscription(userId) {
-  const status = "canceled";
-  return await cancelSubscriptionQuery(userId, status);
+export async function getSubscriptionByUserIdService(userId) {
+  return await getSubscriptionByUserId(userId);
 }
-
-export async function getSubscription(userId) {
-  return await getSubscriptionQuery(userId);
+export async function getSubscriptionByMerchantIdService(merchantId) {
+  return await getSubscriptionByMerchantId(merchantId);
+}
+export async function getSubscriptionByPlanIdService(planId) {
+  return await getSubscriptionByPlanId(planId);
+}
+export async function cancelSubscriptionService(id) {
+  return await cancelSubscription(id);
+}
+export async function getActiveSubscriptionsService() {
+  return await getActiveSubscriptions();
 }
