@@ -33,9 +33,21 @@ where r.name = 'user' and p.name in ('createSubscription','updateSubscription','
 
 
 insert into user_role("userId", "roleId")
-select 1,id from roles where name='admin';
+select 2, id from roles where name = 'admin';
+
+-- assign merchant and user roles
+INSERT INTO user_role("userId", "roleId")
+VALUES
+  (3, (SELECT id FROM roles WHERE name = 'merchant')),
+  (4, (SELECT id FROM roles WHERE name = 'user'));
+
+-- i create 3 users dummy data : i named the first admin with id 2 
+                  --                                merchant with id 3 
+                    --                             user with id 4 
 
 
+
+                    
 --user → role(s) → permission(s)
 --Uses joins instead of subqueries for performance and clarity
 
