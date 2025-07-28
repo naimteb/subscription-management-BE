@@ -49,10 +49,11 @@ export async function getActiveUsers() {
 }
 export async function getUserPermissions(userId) {
   const query = `select p.name as permission from users u join
-user_role ur on u.id=ur."roleId"  join 
+user_role ur on u.id=ur."userId"  join 
 role_permissions rp on ur."roleId"=rp."roleId" join  
 permissions p on rp."permissionId"=p.id 
 where u.id=$1`;
   const result = await pool.query(query, [userId]);
+
   return result.rows.map((row) => row.permission);
 }

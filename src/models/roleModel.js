@@ -52,7 +52,7 @@ export async function updateRolePermissionsTable(roleId, permissions) {
     [roleId]
   );
 
-  const resultToAdd = permissions.filter((val) => storedId.rows.includes(val));
+  const resultToAdd = permissions.filter((val) => !storedId.rows.includes(val));
   await pool.query(
     "insert into role_permissions ('roleId', 'permissionId') values ($1, $2)",
     [roleId, resultToAdd.map((val) => val.id)]

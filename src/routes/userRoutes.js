@@ -1,4 +1,4 @@
-import express from "express";
+import { Router } from "express";
 import {
   createUser,
   getUserByEmail,
@@ -10,7 +10,7 @@ import {
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { checkPermissions } from "../middleware/checkPermissions.js";
 
-const router = express.Router();
+const router = Router();
 
 router.post("/", verifyToken, checkPermissions("createUser"), createUser);
 router.get(

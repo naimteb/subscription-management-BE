@@ -17,6 +17,7 @@ export const createMerchant = asyncHandler(async (req, res) => {
 
 export const getMerchantById = asyncHandler(async (req, res) => {
   const { id } = req.params;
+
   const merchant = await getMerchantByIdService(id);
   res.status(200).json(merchant);
 });
