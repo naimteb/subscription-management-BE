@@ -6,7 +6,7 @@ export function checkPermissions(permissionName) {
     if (!userPermissions.includes(permissionName)) {
       return res.status(403).json({ message: "Forbidden" });
     }
-    console.log("permission passed ");
+
     req.user.permissions = userPermissions;
     next();
   };
